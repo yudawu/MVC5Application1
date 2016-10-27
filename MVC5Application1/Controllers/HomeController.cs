@@ -10,6 +10,7 @@ namespace MVC5Application1.Controllers
     public class HomeController : Controller
     {
         private 客戶資料Entities db = new 客戶資料Entities();
+
         public ActionResult Index(string search)
         {
             var customer = db.vw_Customer.Where(c => c.是否已刪除 != true);
