@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using MVC5Application1.Models;
+using MVC5Application1.Models.ViewModels;
 
 namespace MVC5Application1.Controllers
 {
@@ -14,6 +15,7 @@ namespace MVC5Application1.Controllers
     {
         //private 客戶資料Entities db = new 客戶資料Entities();
         客戶資料Repository repo = RepositoryHelper.Get客戶資料Repository();
+        客戶聯絡人Repository 客戶聯絡人repo = RepositoryHelper.Get客戶聯絡人Repository();
 
         // GET: 客戶資料
         public ActionResult Index(string search, string 客戶分類, string 排序)
@@ -98,6 +100,37 @@ namespace MVC5Application1.Controllers
                 return HttpNotFound();
             }
             return View(客戶資料);
+        }
+        public ActionResult 客戶聯絡人List(int id)
+        {
+            var 客戶聯絡人 = 客戶聯絡人repo.All().Where(客 => 客.客戶Id == id).ToList();
+            return View(客戶聯絡人);
+        }
+
+        public ActionResult BatchUpdate(客戶聯絡人List[] items)
+        {
+            /*
+             * 預設輸出的欄位名稱格式：item.ProductId
+             * 要改成以下欄位格式：
+             * items[0].ProductId
+             * items[1].ProductId
+             */
+            if (ModelState.IsValid)
+            {
+                foreach (var item in items)
+                {
+                    var 客戶聯絡人 = 客戶聯絡人repo.Find(item.Id);
+                    客戶聯絡人.職稱 = item.職稱;
+                    客戶聯絡人.手機 = item.手機;
+                    客戶聯絡人.電話 = item.電話;
+                }
+
+                客戶聯絡人repo.UnitOfWork.Commit();
+
+                return RedirectToAction("Index");
+            }
+
+            return View();
         }
 
         // GET: 客戶資料/Create
