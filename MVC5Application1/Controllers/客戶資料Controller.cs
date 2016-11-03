@@ -16,14 +16,71 @@ namespace MVC5Application1.Controllers
         客戶資料Repository repo = RepositoryHelper.Get客戶資料Repository();
 
         // GET: 客戶資料
-        public ActionResult Index(string search)
+        public ActionResult Index(string search, string 客戶分類, string 排序)
         {
             //var 客戶資料 = db.客戶資料.Where(客 => 客.是否已刪除 != true);
             var 客戶資料 = repo.All().Where(客 => 客.是否已刪除 != true);
+            var options = (from p in 客戶資料 select p.客戶分類).Distinct().ToList();
+            ViewBag.客戶分類 = new SelectList(options);
+
             if (!string.IsNullOrEmpty(search))
             {
                 客戶資料 = 客戶資料.Where(客 => 客.客戶名稱.Contains(search) || 客.Email.Contains(search) || 客.傳真.Contains(search) || 客.地址.Contains(search) || 客.統一編號.Contains(search) || 客.電話.Contains(search));
             }
+            if (!string.IsNullOrEmpty(客戶分類))
+            {
+                客戶資料 = 客戶資料.Where(客 => 客.客戶分類.Contains(客戶分類));
+            }
+
+            if (!string.IsNullOrEmpty(排序))
+            {
+                switch (排序)
+                {
+                    case "客戶分類升冪":
+                        客戶資料 = 客戶資料.OrderBy(客 => 客.客戶分類);
+                        break;
+                    case "客戶名稱升冪":
+                        客戶資料 = 客戶資料.OrderBy(客 => 客.客戶名稱);
+                        break;
+                    case "統一編號升冪":
+                        客戶資料 = 客戶資料.OrderBy(客 => 客.統一編號);
+                        break;
+                    case "電話升冪":
+                        客戶資料 = 客戶資料.OrderBy(客 => 客.電話);
+                        break;
+                    case "傳真升冪":
+                        客戶資料 = 客戶資料.OrderBy(客 => 客.傳真);
+                        break;
+                    case "地址名稱升冪":
+                        客戶資料 = 客戶資料.OrderBy(客 => 客.地址);
+                        break;
+                    case "Email升冪":
+                        客戶資料 = 客戶資料.OrderBy(客 => 客.Email);
+                        break;
+                    case "客戶分類降冪":
+                        客戶資料 = 客戶資料.OrderByDescending(客 => 客.客戶分類);
+                        break;
+                    case "客戶名稱降冪":
+                        客戶資料 = 客戶資料.OrderByDescending(客 => 客.客戶名稱);
+                        break;
+                    case "統一編號降冪":
+                        客戶資料 = 客戶資料.OrderByDescending(客 => 客.統一編號);
+                        break;
+                    case "電話降冪":
+                        客戶資料 = 客戶資料.OrderByDescending(客 => 客.電話);
+                        break;
+                    case "傳真降冪":
+                        客戶資料 = 客戶資料.OrderByDescending(客 => 客.傳真);
+                        break;
+                    case "地址降冪":
+                        客戶資料 = 客戶資料.OrderByDescending(客 => 客.地址);
+                        break;
+                    case "Email降冪":
+                        客戶資料 = 客戶資料.OrderByDescending(客 => 客.Email);
+                        break;
+                }
+            }
+
             return View(客戶資料.ToList());
         }
 
@@ -89,7 +146,7 @@ namespace MVC5Application1.Controllers
         // 詳細資訊，請參閱 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,客戶名稱,統一編號,電話,傳真,地址,Email")] 客戶資料 客戶資料)
+        public ActionResult Edit([Bind(Include = "Id,客戶名稱,統一編號,電話,傳真,地址,Email,客戶分類")] 客戶資料 客戶資料)
         {
             if (ModelState.IsValid)
             {

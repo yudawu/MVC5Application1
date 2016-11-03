@@ -17,14 +17,65 @@ namespace MVC5Application1.Controllers
         客戶資料Repository 客戶資料repo = RepositoryHelper.Get客戶資料Repository();
 
         // GET: 客戶聯絡人
-        public ActionResult Index(string search)
+        public ActionResult Index(string search, string 職稱, string 排序)
         {
             //var 客戶聯絡人 = db.客戶聯絡人.Include(客 => 客.客戶資料).Where(客 => 客.是否已刪除 != true);
             var 客戶聯絡人 = repo.All().Include(客 => 客.客戶資料).Where(客 => 客.是否已刪除 != true);
+            var options = (from p in 客戶聯絡人 select p.職稱).Distinct().ToList();
+            ViewBag.職稱 = new SelectList(options);
+
             if (!string.IsNullOrEmpty(search))
             {
                 客戶聯絡人 = 客戶聯絡人.Where(客 => 客.姓名.Contains(search) || 客.手機.Contains(search) || 客.職稱.Contains(search) || 客.電話.Contains(search) || 客.Email.Contains(search));
             }
+            if (!string.IsNullOrEmpty(職稱))
+            {
+                客戶聯絡人 = 客戶聯絡人.Where(客 => 客.職稱.Contains(職稱));
+            }
+
+            if (!string.IsNullOrEmpty(排序))
+            {
+                switch (排序)
+                {
+                    case "職稱升冪":
+                        客戶聯絡人 = 客戶聯絡人.OrderBy(客 => 客.職稱);
+                        break;
+                    case "姓名升冪":
+                        客戶聯絡人 = 客戶聯絡人.OrderBy(客 => 客.姓名);
+                        break;
+                    case "Email升冪":
+                        客戶聯絡人 = 客戶聯絡人.OrderBy(客 => 客.Email);
+                        break;
+                    case "手機升冪":
+                        客戶聯絡人 = 客戶聯絡人.OrderBy(客 => 客.手機);
+                        break;
+                    case "電話升冪":
+                        客戶聯絡人 = 客戶聯絡人.OrderBy(客 => 客.電話);
+                        break;
+                    case "客戶名稱升冪":
+                        客戶聯絡人 = 客戶聯絡人.OrderBy(客 => 客.客戶資料.客戶名稱);
+                        break;
+                    case "職稱降冪":
+                        客戶聯絡人 = 客戶聯絡人.OrderByDescending(客 => 客.職稱);
+                        break;
+                    case "姓名降冪":
+                        客戶聯絡人 = 客戶聯絡人.OrderByDescending(客 => 客.姓名);
+                        break;
+                    case "Email降冪":
+                        客戶聯絡人 = 客戶聯絡人.OrderByDescending(客 => 客.Email);
+                        break;
+                    case "手機降冪":
+                        客戶聯絡人 = 客戶聯絡人.OrderByDescending(客 => 客.手機);
+                        break;
+                    case "電話降冪":
+                        客戶聯絡人 = 客戶聯絡人.OrderByDescending(客 => 客.電話);
+                        break;
+                    case "客戶名稱降冪":
+                        客戶聯絡人 = 客戶聯絡人.OrderByDescending(客 => 客.客戶資料.客戶名稱);
+                        break;
+                }
+            }
+
             return View(客戶聯絡人.ToList());
         }
 
