@@ -9,11 +9,12 @@ namespace MVC5Application1.Controllers
 {
     public class HomeController : Controller
     {
-        private 客戶資料Entities db = new 客戶資料Entities();
-
+        //private 客戶資料Entities db = new 客戶資料Entities();
+        vw_CustomerRepository repo = RepositoryHelper.Getvw_CustomerRepository();
+        
         public ActionResult Index(string search)
         {
-            var customer = db.vw_Customer.Where(c => c.是否已刪除 != true);
+            var customer = repo.All().Where(c => c.是否已刪除 != true);
 
             if (!string.IsNullOrEmpty(search))
             {
