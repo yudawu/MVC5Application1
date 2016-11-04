@@ -7,9 +7,11 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using MVC5Application1.Models;
+using System.Data.Entity.Validation;
 
 namespace MVC5Application1.Controllers
 {
+    [HandleError(ExceptionType = typeof(DbEntityValidationException), View = "Error_DbEntityValidationException")]
     public class 客戶聯絡人Controller : Controller
     {
         //private 客戶資料Entities db = new 客戶資料Entities();
@@ -153,10 +155,10 @@ namespace MVC5Application1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,客戶Id,職稱,姓名,Email,手機,電話")] 客戶聯絡人 客戶聯絡人)
         {
-            if (ModelState.IsValid)
+            //if (ModelState.IsValid)
             {
-                var customer = repo.All().Where(客 => 客.Id != 客戶聯絡人.Id && 客.客戶Id == 客戶聯絡人.客戶Id && 客.Email == 客戶聯絡人.Email).ToList();
-                if (customer.Count == 0)
+                //var customer = repo.All().Where(客 => 客.Id != 客戶聯絡人.Id && 客.客戶Id == 客戶聯絡人.客戶Id && 客.Email == 客戶聯絡人.Email).ToList();
+                //if (customer.Count == 0)
                 {
                     var db = repo.UnitOfWork.Context;
                     db.Entry(客戶聯絡人).State = EntityState.Modified;
@@ -165,10 +167,11 @@ namespace MVC5Application1.Controllers
 
                 //db.Entry(客戶聯絡人).State = EntityState.Modified;
                 //db.SaveChanges();
-                return RedirectToAction("Index");
+                //return RedirectToAction("Index");
             }
             ViewBag.客戶Id = new SelectList(客戶資料repo.All(), "Id", "客戶名稱", 客戶聯絡人.客戶Id);
-            return View(客戶聯絡人);
+            //return View(客戶聯絡人);
+            return RedirectToAction("Index");
         }
 
         // GET: 客戶聯絡人/Delete/5
