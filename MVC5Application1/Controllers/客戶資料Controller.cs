@@ -8,6 +8,13 @@ using System.Web;
 using System.Web.Mvc;
 using MVC5Application1.Models;
 using MVC5Application1.Models.ViewModels;
+using NPOI.HSSF.UserModel;
+using NPOI.SS.UserModel;
+using NPOI.SS.Util;
+using NPOI.HSSF.Util;
+using NPOI.POIFS.FileSystem;
+using NPOI.HPSF;
+using System.IO;
 
 namespace MVC5Application1.Controllers
 {
@@ -84,6 +91,43 @@ namespace MVC5Application1.Controllers
             }
 
             return View(客戶資料.ToList());
+        }
+
+        public ActionResult NPOI()
+        {
+            var 客戶資料 = repo.All().Where(客 => 客.是否已刪除 != true).ToArray();
+
+            var workbook = new HSSFWorkbook();
+            var sheet = workbook.CreateSheet("Sheet1");
+            var rowIndex = 0;
+            var row = sheet.CreateRow(rowIndex);
+            row.CreateCell(0).SetCellValue("客戶名稱");
+            row.CreateCell(1).SetCellValue("客戶分類");
+            row.CreateCell(2).SetCellValue("統一編號");
+            row.CreateCell(3).SetCellValue("地址");
+            row.CreateCell(4).SetCellValue("Email");
+            row.CreateCell(5).SetCellValue("電話");
+            row.CreateCell(6).SetCellValue("傳真");
+            rowIndex++;
+
+            foreach (客戶資料 item in 客戶資料)
+            {
+                row = sheet.CreateRow(rowIndex);
+                row.CreateCell(0).SetCellValue(item.客戶名稱);
+                row.CreateCell(1).SetCellValue(item.客戶分類);
+                row.CreateCell(2).SetCellValue(item.統一編號);
+                row.CreateCell(3).SetCellValue(item.地址);
+                row.CreateCell(4).SetCellValue(item.Email);
+                row.CreateCell(5).SetCellValue(item.電話);
+                row.CreateCell(6).SetCellValue(item.傳真);
+                rowIndex++;
+            }
+
+            MemoryStream files = new MemoryStream();
+            workbook.Write(files);
+            files.Close();
+
+            return File(files.ToArray(), "application/vnd.ms-excel", "客戶資料.xls");
         }
 
         // GET: 客戶資料/Details/5
