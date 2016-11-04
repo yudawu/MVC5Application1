@@ -8,9 +8,12 @@ using System.Web;
 using System.Web.Mvc;
 using MVC5Application1.Models;
 using System.Data.Entity.Validation;
+using MVC5Course.Controllers;
 
 namespace MVC5Application1.Controllers
 {
+    [LocalDebugOnly]
+    [ExecutingTime]
     [HandleError(ExceptionType = typeof(DbEntityValidationException), View = "Error_DbEntityValidationException")]
     public class 客戶聯絡人Controller : Controller
     {

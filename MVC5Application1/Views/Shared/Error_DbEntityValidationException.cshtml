@@ -7,6 +7,17 @@
 <h1 class="text-danger">錯誤。</h1>
 <h2 class="text-danger">處理您的要求時發生錯誤。</h2>
 
+<h3>執行時間如下</h3>
+<table class="table table-bordered">
+    <tr>
+        <th>Action</th>
+        <th>ActionResult</th>
+    </tr>
+    <tr>
+        <td>@ViewData["ActionTimeSpan"]</td>
+        <td>@ViewData["ResultTimeSpan"]</td>
+    </tr>
+</table>
 @using System.Data.Entity.Validation
 @{
     var ex = Model.Exception as DbEntityValidationException;
