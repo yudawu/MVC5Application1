@@ -4,9 +4,13 @@
     ViewBag.Title = "Index";
 }
 
-<h2>首頁</h2>
+@section breadcrumb {
+    <li><a href="@Url.Action("Index")">首頁</a></li>
+}
 
-@*<p>
+@*<h2>首頁</h2>
+
+<p>
     @Html.ActionLink("Create New", "Create")
 </p>*@
 <form method="post" action="">

@@ -290,6 +290,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="index.html" />
     <Content Include="Models\Customer.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Customer.edmx</DependentUpon>
@@ -385,9 +386,15 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\客戶資料\客戶聯絡人List.cshtml" />
     <Content Include="Views\Shared\Error_DbEntityValidationException.cshtml" />
+    <Content Include="Views\Shared\_LayoutBootstrap.cshtml" />
+    <Content Include="Views\Home\_ViewStart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="css\" />
+    <Folder Include="font\" />
+    <Folder Include="img\" />
+    <Folder Include="js\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
