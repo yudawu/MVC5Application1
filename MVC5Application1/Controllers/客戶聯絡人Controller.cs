@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using MVC5Application1.Models;
 using System.Data.Entity.Validation;
 using MVC5Course.Controllers;
+using PagedList;
 
 namespace MVC5Application1.Controllers
 {
@@ -20,9 +21,10 @@ namespace MVC5Application1.Controllers
         //private 客戶資料Entities db = new 客戶資料Entities();
         客戶聯絡人Repository repo = RepositoryHelper.Get客戶聯絡人Repository();
         客戶資料Repository 客戶資料repo = RepositoryHelper.Get客戶資料Repository();
+        private int pageSize = 3;
 
         // GET: 客戶聯絡人
-        public ActionResult Index(string search, string 職稱, string 排序)
+        public ActionResult Index(string search, string 職稱, string 排序, int? page)
         {
             //var 客戶聯絡人 = db.客戶聯絡人.Include(客 => 客.客戶資料).Where(客 => 客.是否已刪除 != true);
             var 客戶聯絡人 = repo.All().Include(客 => 客.客戶資料).Where(客 => 客.是否已刪除 != true);
@@ -80,8 +82,13 @@ namespace MVC5Application1.Controllers
                         break;
                 }
             }
+            else
+            {
+                客戶聯絡人 = 客戶聯絡人.OrderBy(客 => 客.Id);
+            }
 
-            return View(客戶聯絡人.ToList());
+            var pageNumeber = page ?? 1;
+            return View(客戶聯絡人.ToPagedList(pageNumeber, pageSize));
         }
 
         // GET: 客戶聯絡人/Details/5
