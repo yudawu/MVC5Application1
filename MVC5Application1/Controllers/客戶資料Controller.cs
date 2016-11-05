@@ -18,6 +18,7 @@ using System.IO;
 
 namespace MVC5Application1.Controllers
 {
+    [Authorize]
     public class 客戶資料Controller : Controller
     {
         //private 客戶資料Entities db = new 客戶資料Entities();
@@ -231,6 +232,38 @@ namespace MVC5Application1.Controllers
                 db.Entry(客戶資料).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
+            }
+            return View(客戶資料);
+        }
+
+        public ActionResult Edit2()
+        {            
+            if (User.Identity == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var 客戶資料 = repo.All().Where(客 => 客.帳號 == User.Identity.Name).ToList();
+            if (客戶資料.Count == 1)
+            {
+                return View(客戶資料.FirstOrDefault());
+            }
+            return HttpNotFound();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit2([Bind(Include = "Id,電話,傳真,地址,Email,密碼")] 客戶資料 客戶資料)
+        {
+            //if (ModelState.IsValid)
+            {
+                客戶資料 客戶資料2 = repo.Find(客戶資料.Id);
+                客戶資料2.電話 = 客戶資料.電話;
+                客戶資料2.傳真 = 客戶資料.傳真;
+                客戶資料2.地址 = 客戶資料.地址;
+                客戶資料2.Email = 客戶資料.Email;
+                客戶資料2.密碼 = Hash.Encode(客戶資料.密碼);
+                repo.UnitOfWork.Commit();
+                //return RedirectToAction("Index");
             }
             return View(客戶資料);
         }

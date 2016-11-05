@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 
 namespace MVC5Application1.Controllers
 {
@@ -35,6 +36,32 @@ namespace MVC5Application1.Controllers
         {
             ViewBag.Message = "Your contact page.";
 
+            return View();
+        }
+
+        public ActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Login(LoginViewModel login, string ReturnUrl)
+        {
+            if (ModelState.IsValid)
+            {
+                客戶資料Repository 客戶資料repo = RepositoryHelper.Get客戶資料Repository();
+                var customer = 客戶資料repo.All().Where(客 => 客.帳號 == login.Email).ToList();
+
+                if (customer.Count == 1)
+                {
+                    if (customer.First().密碼 == Hash.Encode(login.Password))
+                    {
+                        FormsAuthentication.RedirectFromLoginPage(login.Email, false);
+                        //return Redirect(ReturnUrl ?? "/");
+                        return Redirect("/客戶資料/Edit2");
+                    }
+                }
+            }
             return View();
         }
     }
